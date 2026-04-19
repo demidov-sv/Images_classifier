@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Загружено</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 50px auto; text-align: center; }
+        .card { background: #e8f5e9; padding: 30px; border-radius: 10px; border: 1px solid #4caf50; }
+        h2 { color: #2e7d32; }
+        .task-id { font-family: monospace; background: #fff; padding: 8px 15px; border-radius: 5px; font-size: 18px; }
+        a { color: #1565c0; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>✅ Успешно, {{ name }}!</h2>
+        <p>Файл принят, задача запущена.</p>
+        <p>Код задачи:</p>
+        <p class="task-id">{{ task_id }}</p>
+        <p>Проверяй результат:<br>
+            <a href="{{ check_url }}">{{ check_url }}</a>
+        </p>
+        <p><a href="/">← Загрузить ещё</a></p>
+    </div>
+</body>
+</html>
