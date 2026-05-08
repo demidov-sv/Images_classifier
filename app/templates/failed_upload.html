@@ -2,19 +2,124 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Ошибка</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ошибка загрузки</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 500px; margin: 50px auto; text-align: center; }
-        .card { background: #ffebee; padding: 30px; border-radius: 10px; border: 1px solid #f44336; }
-        h2 { color: #c62828; }
-        a { color: #1565c0; }
+        :root {
+            --error-color: #ef4444;
+            --error-hover: #dc2626;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .icon-error {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            background-color: #fef2f2;
+            color: var(--error-color);
+            border-radius: 50%;
+            margin-bottom: 20px;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        h2 {
+            margin: 0 0 10px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #b91c1c;
+        }
+
+        .error-message {
+            background: #fff5f5;
+            border: 1px solid #fee2e2;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            color: #7f1d1d;
+            font-size: 15px;
+            word-wrap: break-word;
+        }
+
+        .btn {
+            display: block;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--error-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-outline {
+            margin-top: 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .btn-outline:hover {
+            color: var(--text-main);
+        }
     </style>
 </head>
 <body>
+
     <div class="card">
-        <h2>❌ Ошибка загрузки</h2>
-        <p>{{ message }}</p>
-        <p><a href="/">← Попробовать снова</a></p>
+        <div class="icon-error">!</div>
+        
+        <h2>Ошибка загрузки</h2>
+        
+        <div class="error-message">
+            {{ message }}
+        </div>
+
+        <a href="/" class="btn btn-primary">Попробовать снова</a>
+        
+        <a href="/" class="btn btn-outline">Вернуться на главную</a>
     </div>
+
 </body>
 </html>
