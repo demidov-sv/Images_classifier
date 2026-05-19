@@ -1,0 +1,22 @@
+# Backend/Dockerfile
+FROM python:3.11-slim
+
+# Устанавливаем системные зависимости, необходимые для OpenCV и YOLO
+RUN apt-get update && apt-get install -y \
+    libgl1 \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+WORKDIR /app
+
+COPY pyproject.toml .
+
+RUN uv pip install --system -e .
+
+COPY app ./app
+
+ENV PYTHONPATH=/app/app
+
+EXPOSE 8000

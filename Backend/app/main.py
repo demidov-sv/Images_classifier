@@ -1,8 +1,8 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from routes import router as image_router
-from database import init_db
-from s3_client import init_s3
+from infrastructure.database import init_db
+from infrastructure.s3_client import init_s3
 
 
 @asynccontextmanager
