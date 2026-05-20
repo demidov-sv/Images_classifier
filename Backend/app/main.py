@@ -4,10 +4,11 @@ from routes import router as image_router
 from infrastructure.database import database
 from infrastructure.s3_client import s3_manager
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    database.init_db()  # Вызываем через объект
-    s3_manager.init_s3() # Вызываем через объект
+    database.init_db()
+    s3_manager.init_s3()
     yield
 
 
