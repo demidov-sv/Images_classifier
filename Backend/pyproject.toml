@@ -6,11 +6,12 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi",
-    "uvicorn",
+    "uvicorn[standard]",       
     "python-multipart",
     "jinja2",
-    "redis",
-    "boto3",
+    "redis",                   
+    "aioboto3",                
+    "aiosqlite",               
     "pydantic-settings",
     "ultralytics",
     "opencv-python-headless",

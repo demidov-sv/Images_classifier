@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   api:
     build: 
@@ -6,44 +8,34 @@ services:
     container_name: classifier_api
     ports:
       - "8000:8000"
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+ 
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 
     volumes:
-      - ./Backend/app:/app/app       
-      - sqlite_data:/app/data         
+      - sqlite_data:/app/data
     depends_on:
       redis:
         condition: service_healthy
       minio:
         condition: service_healthy
-    environment:
-      - REDIS_HOST=redis
-      - S3_ENDPOINT=http://minio:9000
-      - DB_PATH=/app/data/stats.db    
+    env_file:
+      - .env
 
-  # Воркеры обработки (2 реплики)
   worker:
     build: 
       context: ./Backend
       dockerfile: Dockerfile
-    # container_name убран, чтобы Docker мог запустить несколько контейнеров
     command: python app/worker.py
     volumes:
-      - ./Backend/app:/app/app
       - sqlite_data:/app/data
-      - yolo_models:/models           # Кэширование весов yolov8s.pt
+      - ./Backend/models:/models
     depends_on:
       redis:
         condition: service_healthy
       minio:
         condition: service_healthy
-    deploy:
-      replicas: 1                     # Запуск ровно 2-х воркеров в параллели
-    environment:
-      - REDIS_HOST=redis
-      - S3_ENDPOINT=http://minio:9000
-      - DB_PATH=/app/data/stats.db
+    env_file:
+      - .env
 
-  # Очередь задач
   redis:
     image: redis:7-alpine
     container_name: classifier_redis
@@ -51,30 +43,25 @@ services:
       - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 3s
+      interval: 3s
+      timeout: 2s
       retries: 5
 
-  # S3 Хранилище (MinIO)
   minio:
-    image: minio/minio
+    image: minio/minio:latest
     container_name: classifier_minio
     ports:
-      - "19000:9000"
-      - "19001:9001"
-    environment:
-      - MINIO_ROOT_USER=admin
-      - MINIO_ROOT_PASSWORD=password123
+      - "9000:9000"
+      - "9001:9001"
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 5s
-      timeout: 3s
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9000/minio/health/ready"]
+      interval: 3s
+      timeout: 2s
       retries: 5
 
 volumes:
   sqlite_data:
   minio_data:
-  yolo_models:

@@ -1,14 +1,13 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from routes import router as image_router
-from infrastructure.database import init_db
-from infrastructure.s3_client import init_s3
-
+from infrastructure.database import database
+from infrastructure.s3_client import s3_manager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    init_db()
-    init_s3()
+    database.init_db()  # Вызываем через объект
+    s3_manager.init_s3() # Вызываем через объект
     yield
 
 

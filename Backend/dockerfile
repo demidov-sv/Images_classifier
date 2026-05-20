@@ -1,20 +1,23 @@
 # Backend/Dockerfile
 FROM python:3.11-slim
 
-# Устанавливаем системные зависимости, необходимые для OpenCV и YOLO
+# Устанавливаем системные зависимости для OpenCV, YOLO и скачивания весов
 RUN apt-get update && apt-get install -y \
     libgl1 \
     libglib2.0-0 \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
+# Берём uv для моментальной и чистой сборки зависимостей
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 WORKDIR /app
 
+# Сначала копируем описание зависимостей для эффективного кэширования слоев Docker
 COPY pyproject.toml .
+RUN uv pip install --system --no-cache -e .
 
-RUN uv pip install --system -e .
-
+# Копируем исходный код приложения
 COPY app ./app
 
 ENV PYTHONPATH=/app/app
