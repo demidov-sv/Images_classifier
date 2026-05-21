@@ -18,7 +18,26 @@ dependencies = [
     "opencv-python-headless",
     "pillow",
     "numpy",
-    "pytest>=8.0.0",
-    "httpx>=0.27.0",
-    "locust>=2.24.0",
 ]
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-mock>=3.12.0",
+    "httpx>=0.27.0",
+    "locust",
+    "ruff",
+    "mypy",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+pythonpath = [
+  ".",
+  "app"   
+]
+testpaths = [
+  "tests"
+]
+[tool.setuptools]
+packages = ["app"]

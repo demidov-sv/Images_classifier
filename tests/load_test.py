@@ -8,7 +8,7 @@ from collections import defaultdict
 URL = "http://localhost:8000"
 IMAGE_PATH = "tests/test_image.png"
 RPS = 5
-DURATION = 10
+DURATION = 300
 
 try:
     IMAGE_BYTES = open(IMAGE_PATH, "rb").read()
@@ -73,7 +73,7 @@ async def worker(client, task_num):
                 return ("error", elapsed)
 
             if "обработка" in body or "в процессе" in body:
-                await asyncio.sleep(0.25)
+                await asyncio.sleep(0.1)
                 continue
 
             print(f" СТРАННЫЙ ОТВЕТ: Код {r2.status_code}, текст: {body[:100]}")

@@ -52,7 +52,17 @@ services:
       interval: 3s
       timeout: 2s
       retries: 5
-
+  locust:
+    image: locustio/locust
+    container_name: classifier_locust
+    profiles: ["test"]  
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./Backend/tests:/mnt/locust
+    command: -f /mnt/locust/locustfile.py --host http://api:8000
+    depends_on:
+      - api
   minio:
     image: minio/minio:latest
     container_name: classifier_minio

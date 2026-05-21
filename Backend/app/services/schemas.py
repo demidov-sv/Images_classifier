@@ -23,6 +23,4 @@ class TaskPresentationModel(BaseModel):
     )
 
     class Config:
-        # Позволяет Pydantic работать не только со словарями,
-        # но и с ORM-моделями (например, если SQLAlchemy начнет возвращать объекты)
         from_attributes = True

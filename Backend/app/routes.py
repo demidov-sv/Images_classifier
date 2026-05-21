@@ -5,7 +5,7 @@
 """
 import logging
 from pathlib import Path
-from fastapi import File, UploadFile, Form, Request, APIRouter
+from fastapi import File, UploadFile, Form, Request, APIRouter, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
@@ -24,7 +24,7 @@ current_dir = Path(__file__).resolve().parent
 templates_dir = current_dir.parent / "templates"
 templates = Jinja2Templates(directory=templates_dir)
 router = APIRouter(tags=["Images"])
-
+MAX_QUEUE_SIZE = 20
 
 @router.get("/", response_class=HTMLResponse)
 async def form(request: Request) -> HTMLResponse:
@@ -55,6 +55,16 @@ async def priem(request: Request, name: str = Form(...), file: UploadFile = File
         HTMLResponse: HTML-страница успешной загрузки (200), страница ошибки 
             валидации данных (400) или страница внутренней ошибки сервера (500).
     """
+    try:
+        current_queue_len = redis_client.llen("celery") 
+    except Exception as e:
+        current_queue_len = 0
+    if current_queue_len >= MAX_QUEUE_SIZE:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"Сервер перегружен. В очереди уже {MAX_QUEUE_SIZE} задач. Попробуйте позже."
+        )
+    
     data = await file.read()
 
     try:
