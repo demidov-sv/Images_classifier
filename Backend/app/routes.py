@@ -8,7 +8,8 @@ from pathlib import Path
 from fastapi import File, UploadFile, Form, Request, APIRouter, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-
+from fastapi import status
+from infrastructure.redis_client import async_redis_conn as redis_client
 
 from services.services import (
     validate_and_process_image_async,
@@ -56,8 +57,8 @@ async def priem(request: Request, name: str = Form(...), file: UploadFile = File
             валидации данных (400) или страница внутренней ошибки сервера (500).
     """
     try:
-        current_queue_len = redis_client.llen("celery") 
-    except Exception as e:
+        current_queue_len = await redis_client.llen("image_queue") 
+    except Exception:
         current_queue_len = 0
     if current_queue_len >= MAX_QUEUE_SIZE:
         raise HTTPException(

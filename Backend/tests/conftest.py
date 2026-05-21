@@ -2,7 +2,7 @@ import pytest
 from typing import Generator
 from fastapi.testclient import TestClient
 from pytest_mock import MockerFixture
-from unittest.mock import MagicMock, AsyncMock
+from unittest.mock import AsyncMock
 
 
 from main import app

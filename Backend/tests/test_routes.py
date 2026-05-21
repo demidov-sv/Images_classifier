@@ -4,7 +4,7 @@ from pytest_mock import MockerFixture
 from unittest.mock import MagicMock, AsyncMock
 
 from services.schemas import TaskStatus
-from services.services import ServiceValidationError, TaskNotFoundError
+from services.services import ServiceValidationError
 
 
 def test_get_form_page(client: TestClient) -> None:
